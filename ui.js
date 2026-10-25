@@ -134,7 +134,7 @@ function titleHtml() {
     '<button class="btn ' + (has ? '' : 'primary ') + 'big" data-act="newScreen">Yeni Kariyer</button>' +
     '<button class="btn ghost" data-act="importFile">Kayıt dosyası yükle</button>' +
     '</div>' +
-    '<ul class="feat"><li>16 kulüplü lig + eleme usulü kupa</li><li>Canlı anlatımlı maç motoru, oyun içi taktik ve oyuncu değişikliği</li><li>Transferler, sözleşmeler, yönetim baskısı, altyapı</li><li>Bir sezon yaklaşık 40-60 dakika</li></ul>' +
+    '<ul class="feat"><li>16 kulüplü lig + eleme usulü kupa</li><li>Maçı gerçekten etkileyen taktikler: tempo, savunma çizgisi, genişlik, pas/direkt/kontra</li><li>Pazarlıklı transferler: takas, imza parası, primler, satıştan pay</li><li>Gün gün takvim, canlı anlatım ve stadyum sesleri</li><li>Bir sezon yaklaşık 40-60 dakika</li></ul>' +
     '<p class="credit">Tüm kulüp ve oyuncu isimleri kurgusaldır</p>' +
     '</div></div>';
 }
