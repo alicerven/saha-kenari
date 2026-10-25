@@ -1,8 +1,8 @@
 # Saha Kenarı
 
-Tarayıcıda oynanan, metin anlatımlı bir futbol menajerliği oyunu prototipi. Kurgusal 16 kulüplü bir ligde bir kulübü seçip sezonu yönetirsin. Bir sezon yaklaşık 40-60 dakika sürer.
+Tarayıcıda oynanan, metin anlatımlı bir futbol menajerliği oyunu. Kurgusal 16 kulüplü bir ligde bir kulübü seçip sezonu yönetirsin. Bir sezon yaklaşık 40-60 dakika sürer.
 
-**Oyna:** GitHub Pages bağlantısı (yayınladıktan sonra buraya ekle)
+**Oyna:** https://alicerven.github.io/saha-kenari/
 
 ## Neler var
 
