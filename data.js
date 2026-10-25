@@ -1,0 +1,166 @@
+'use strict';
+// Kurgusal veri: kulüpler, milliyetler, isim listeleri, metin şablonları.
+// Tüm isimler rastgele birleştirilir; gerçek kişi/kulüp temsil etmez.
+
+const CLUBS = [
+  { n: 'Boğaziçi SK', s: 'BOĞ', c: ['#0b2a5b', '#f2c230'], rep: 90, city: 'İstanbul', st: 'Rumeli Arena', cap: 52000 },
+  { n: 'Haliç Spor', s: 'HAL', c: ['#b3121f', '#151515'], rep: 87, city: 'İstanbul', st: 'Haliç Stadı', cap: 48000 },
+  { n: 'Anka İstanbul', s: 'ANK', c: ['#4b1e78', '#ffffff'], rep: 83, city: 'İstanbul', st: 'Anka Park', cap: 41000 },
+  { n: 'Başkent Gücü', s: 'BAŞ', c: ['#f1f1f1', '#c8102e'], rep: 78, city: 'Ankara', st: 'Başkent Arena', cap: 36000 },
+  { n: 'Ege Dalgası', s: 'EGE', c: ['#0077b6', '#ffffff'], rep: 75, city: 'İzmir', st: 'Körfez Stadı', cap: 30000 },
+  { n: 'Karadeniz FK', s: 'KRD', c: ['#14532d', '#facc15'], rep: 72, city: 'Trabzon', st: 'Dalga Kıran Stadı', cap: 32000 },
+  { n: 'Çukurova Akıncıları', s: 'ÇUK', c: ['#ea580c', '#1f2937'], rep: 69, city: 'Adana', st: 'Seyhan Arena', cap: 28000 },
+  { n: 'Yeşilvadi Bursa', s: 'YEŞ', c: ['#15803d', '#ffffff'], rep: 66, city: 'Bursa', st: 'Uludağ Parkı', cap: 27000 },
+  { n: 'Kapadokya SK', s: 'KAP', c: ['#a16207', '#fef3c7'], rep: 62, city: 'Nevşehir', st: 'Peribacası Stadı', cap: 16000 },
+  { n: 'Turkuaz Antalya', s: 'TRK', c: ['#06b6d4', '#0f172a'], rep: 61, city: 'Antalya', st: 'Lara Arena', cap: 22000 },
+  { n: 'Ovaspor Konya', s: 'OVA', c: ['#e5e7eb', '#166534'], rep: 58, city: 'Konya', st: 'Ova Stadı', cap: 25000 },
+  { n: 'Yaylaspor Kayseri', s: 'YAY', c: ['#dc2626', '#facc15'], rep: 56, city: 'Kayseri', st: 'Yayla Arena', cap: 21000 },
+  { n: 'Deportivo de la Mancha', s: 'DLM', c: ['#d4a017', '#2b1d0e'], rep: 54, city: 'La Mancha', st: 'Estadio Rocinante', cap: 20000, nat: 'ESP' },
+  { n: 'Porsuk Eskişehir', s: 'PRS', c: ['#ef4444', '#111827'], rep: 52, city: 'Eskişehir', st: 'Porsuk Parkı', cap: 18000 },
+  { n: 'Liman SK', s: 'LİM', c: ['#be123c', '#ffffff'], rep: 50, city: 'Samsun', st: 'Liman Stadı', cap: 17000 },
+  { n: 'Van Gölü Spor', s: 'VAN', c: ['#1d4ed8', '#fde047'], rep: 47, city: 'Van', st: 'Göl Kıyısı Stadı', cap: 15000 },
+];
+
+// Lige yükselen kurgusal kulüpler (sezon sonlarında sırayla kullanılır)
+const PROMO_CLUBS = [
+  { n: 'Mardin Taşspor', s: 'MRD', c: ['#78350f', '#fde68a'], city: 'Mardin', st: 'Taş Kale Stadı', cap: 11000 },
+  { n: 'Trakya Ayçiçeği', s: 'TRA', c: ['#facc15', '#1e3a8a'], city: 'Edirne', st: 'Selimiye Parkı', cap: 12000 },
+  { n: 'Hatay Zeytinspor', s: 'HTY', c: ['#4d7c0f', '#ffffff'], city: 'Hatay', st: 'Zeytin Arena', cap: 14000 },
+  { n: 'Malatya Kayısıspor', s: 'MLT', c: ['#f97316', '#111827'], city: 'Malatya', st: 'Kayısı Stadı', cap: 13000 },
+  { n: 'Palandöken FK', s: 'PAL', c: ['#0ea5e9', '#ffffff'], city: 'Erzurum', st: 'Palandöken Stadı', cap: 15000 },
+  { n: 'Sakarya Nehirspor', s: 'SAK', c: ['#22c55e', '#0f172a'], city: 'Sakarya', st: 'Nehir Arena', cap: 16000 },
+  { n: 'Bodrum Mavi', s: 'BDR', c: ['#2563eb', '#e0f2fe'], city: 'Muğla', st: 'Mavi Koy Stadı', cap: 9000 },
+  { n: 'Kars Kalespor', s: 'KRS', c: ['#991b1b', '#fef9c3'], city: 'Kars', st: 'Kale Stadı', cap: 10000 },
+  { n: 'Pamukkale SK', s: 'PMK', c: ['#f8fafc', '#0e7490'], city: 'Denizli', st: 'Traverten Arena', cap: 15000 },
+  { n: 'Çanakkale Boğazspor', s: 'ÇNK', c: ['#1e40af', '#fca5a5'], city: 'Çanakkale', st: 'Boğaz Stadı', cap: 12000 },
+  { n: 'Ordu Fındıkspor', s: 'ORD', c: ['#a3e635', '#3f2d20'], city: 'Ordu', st: 'Fındık Arena', cap: 12000 },
+  { n: 'Sivas Kızılırmak', s: 'SVS', c: ['#dc2626', '#f8fafc'], city: 'Sivas', st: 'Kızılırmak Stadı', cap: 14000 },
+];
+
+const NATS = {
+  TUR: { n: 'Türkiye',
+    f: ['Ahmet','Mehmet','Mustafa','Emre','Burak','Can','Cem','Kerem','Arda','Ozan','Onur','Serkan','Hakan','Volkan','Umut','Yusuf','Eren','Barış','Berk','Kaan','Mert','Oğuz','Selim','Tolga','Tuna','Furkan','Efe','Doruk','Alper','Batuhan','Cenk','Deniz','Egemen','Ferdi','Gökhan','Halil','İlker','Kadir','Levent','Melih','Necip','Orkun','Rıdvan','Sinan','Taner','Uğur','Yasin','Zafer','Emir','Çağan','Görkem','Hüseyin','İsmail','Koray','Mücahit','Okan','Recep','Sefa','Tarık','Yiğit','Bora','Atakan','Ege','Kutay','Polat'],
+    l: ['Yılmaz','Kaya','Demir','Şahin','Çelik','Yıldız','Yıldırım','Öztürk','Aydın','Özdemir','Arslan','Doğan','Kılıç','Aslan','Çetin','Kara','Koç','Kurt','Özkan','Şimşek','Polat','Erdem','Korkmaz','Akın','Bulut','Güneş','Aktaş','Tekin','Ünal','Karaca','Uçar','Taş','Avcı','Sarı','Akbulut','Toprak','Ateş','Bozkurt','Erten','Kandemir','Sezer','Tuncer','Uysal','Yalçın','Ekinci','Durmaz','Çakır','Keskin','Oral','Soylu','Tan','Yavuz','Alkan','Baysal','Coşkun','Duman','Gök','Işık','Karakuş','Metin','Nalbant','Okur','Pektaş','Sağlam','Temiz','Ulusoy','Vural','Yazıcı','Zorlu','Altıntaş','Bayram','Cömert','Dinçer','Elmas','Gürsoy','Kalkan','Oktay','Sevim','Kurtuluş','Akgül','Demirtaş','Erbay','Gençer','Kocabaş'] },
+  BRA: { n: 'Brezilya',
+    f: ['João','Lucas','Gabriel','Thiago','Rafael','Matheus','Felipe','Bruno','Diego','Caio','Renan','Wellington','Everton','Igor','Leandro','Vitor'],
+    l: ['Silva','Santos','Oliveira','Souza','Pereira','Costa','Almeida','Ribeiro','Carvalho','Gomes','Martins','Araújo','Barbosa','Rocha','Cardoso','Teixeira'] },
+  ARG: { n: 'Arjantin',
+    f: ['Facundo','Matías','Nicolás','Agustín','Franco','Gonzalo','Ezequiel','Tomás','Santiago','Joaquín','Leandro','Iván'],
+    l: ['González','Rodríguez','Fernández','López','Martínez','Pérez','Sosa','Romero','Acosta','Benítez','Medina','Herrera','Aguirre','Ledesma'] },
+  NGA: { n: 'Nijerya',
+    f: ['Chinedu','Emeka','Ikechukwu','Oluwaseun','Tunde','Ade','Samuel','Victor','Kelechi','Uche','Femi','Ahmed'],
+    l: ['Okafor','Adeyemi','Okonkwo','Eze','Nwosu','Balogun','Ogunleye','Obi','Abiodun','Chukwu','Ibekwe','Musa'] },
+  SEN: { n: 'Senegal',
+    f: ['Moussa','Cheikh','Ibrahima','Mamadou','Ousmane','Abdou','Pape','Lamine','Babacar','Saliou'],
+    l: ['Diop','Ndiaye','Sarr','Diallo','Fall','Gueye','Sow','Faye','Cissé','Mbaye','Seck','Kouyaté'] },
+  SRB: { n: 'Sırbistan',
+    f: ['Nikola','Marko','Stefan','Luka','Miloš','Filip','Nemanja','Dušan','Aleksandar','Uroš'],
+    l: ['Jovanović','Petrović','Nikolić','Marković','Đorđević','Stojanović','Ilić','Pavlović','Milošević','Lazić'] },
+  POR: { n: 'Portekiz',
+    f: ['Tiago','André','Diogo','Rui','Nuno','Pedro','Gonçalo','Hugo','Fábio','Duarte'],
+    l: ['Ferreira','Sousa','Lopes','Marques','Pinto','Neves','Moreira','Fonseca','Correia','Mendes'] },
+  NED: { n: 'Hollanda',
+    f: ['Daan','Sem','Bram','Jesse','Thijs','Ruben','Luuk','Jasper','Stijn','Niels'],
+    l: ['Bakker','Visser','Smit','Meijer','de Boer','Mulder','de Groot','Bos','Vos','Hendriks','Dekker'] },
+  FRA: { n: 'Fransa',
+    f: ['Hugo','Théo','Mathis','Nathan','Enzo','Louis','Maxime','Bastien','Yanis','Quentin'],
+    l: ['Bernard','Dubois','Moreau','Laurent','Lefebvre','Girard','Bonnet','Fontaine','Rousseau','Garnier','Chevalier'] },
+  GER: { n: 'Almanya',
+    f: ['Jonas','Leon','Felix','Lukas','Tim','Niklas','Jan','Moritz','Florian','Tobias'],
+    l: ['Schmidt','Schneider','Fischer','Weber','Wagner','Becker','Hoffmann','Schulz','Koch','Richter','Wolf'] },
+  CRO: { n: 'Hırvatistan',
+    f: ['Ivan','Mateo','Josip','Ante','Domagoj','Mario','Tomislav','Karlo'],
+    l: ['Horvat','Kovačević','Babić','Marić','Jurić','Novak','Knežević','Vuković'] },
+  GHA: { n: 'Gana',
+    f: ['Kwame','Kofi','Yaw','Kwabena','Emmanuel','Isaac','Daniel','Joseph'],
+    l: ['Mensah','Owusu','Asante','Appiah','Osei','Agyemang','Darko','Addo'] },
+  GEO: { n: 'Gürcistan',
+    f: ['Giorgi','Levan','Davit','Nika','Irakli','Otar','Saba'],
+    l: ['Beridze','Kapanadze','Gelashvili','Lomidze','Tsiklauri','Maisuradze','Chikovani'] },
+  COL: { n: 'Kolombiya',
+    f: ['Juan','Andrés','Carlos','Jhon','Sebastián','Camilo','Duván','Yeison'],
+    l: ['Mosquera','Valencia','Murillo','Palacios','Rentería','Arango','Restrepo','Cuesta'] },
+  ESP: { n: 'İspanya',
+    f: ['Alejandro','Pablo','Sergio','Javier','Álvaro','Iker','Raúl','Adrián','Marcos','Rubén','Unai','Mario','Jorge','Óscar'],
+    l: ['García','Sánchez','Navarro','Torres','Ruiz','Díaz','Moreno','Muñoz','Jiménez','Herrero','Castro','Ortega','Delgado','Vidal','Molina'] },
+  BIH: { n: 'Bosna-Hersek',
+    f: ['Edin','Haris','Amer','Emir','Kenan','Adnan','Tarik'],
+    l: ['Hodžić','Begović','Delić','Mujić','Hadžić','Salihović','Omerović'] },
+};
+const FOREIGN = ['BRA','ARG','NGA','SEN','SRB','POR','NED','FRA','GER','CRO','GHA','GEO','COL','BIH','ESP'];
+
+const INJURIES = [
+  { n: 'Darbe', d: [2, 6], w: 6 },
+  { n: 'Ayak bileği burkulması', d: [6, 16], w: 5 },
+  { n: 'Kasık ağrısı', d: [5, 14], w: 4 },
+  { n: 'Hamstring zorlanması', d: [10, 28], w: 4 },
+  { n: 'Baldır kası yırtığı', d: [14, 35], w: 2 },
+  { n: 'Diz bağı zedelenmesi', d: [30, 75], w: 1 },
+  { n: 'Kaval kemiği çatlağı', d: [40, 90], w: 0.5 },
+];
+
+// Maç anlatımı şablonları. İsimler hep yalın halde kullanılır (ek almaz).
+const TX = {
+  build: [
+    '{t} hücumda, top {a} ayağında.',
+    '{a} kanattan ilerliyor, ceza sahasına yaklaşıyor.',
+    '{t} sabırla pas yaparak rakip yarı alana yerleşiyor.',
+    '{a} orta sahada topu kazanıyor, {t} hızlı çıkıyor!',
+    '{t} kontra atağa çıkıyor!',
+  ],
+  norm: {
+    miss: ['{p} ceza sahasından vuruyor... top direğin yanından auta gidiyor.', '{p} şutunu çekiyor ama top üstten auta.', '{p} vurdu, top savunmadan sekip kornere çıktı.', '{p} sert vurdu ama isabet yok.', 'Fırsat! {p} vurdu... top direği yalayıp dışarı çıktı!'],
+    save: ['{p} vurdu, {gk} uzanıp kurtarıyor!', '{p} sert şut! {gk} iki hamlede topu kontrol ediyor.', '{p} köşeye plase vurdu, {gk} müthiş bir refleksle çeliyor!'],
+    goal: ['{p} ceza sahasında boş kaldı ve düzgün bir vuruşla topu ağlara gönderdi!', 'Harika kombinasyon! Pas {a}, son vuruş {p}... GOL!', '{p} kaleciyi yerinde sayan bir vuruşla skoru değiştiriyor!', '{a} ile verkaç, {p} sol alt köşeye bırakıyor. GOL!'],
+  },
+  long: {
+    miss: ['{p} uzaktan denedi, top auta çıktı.', '{p} 30 metreden şansını denedi, top tribünlere gitti.'],
+    save: ['{p} 25 metreden füze gibi bir şut! {gk} parmak uçlarıyla çeliyor!', '{p} uzaktan vurdu, {gk} gole izin vermiyor.'],
+    goal: ['{p} uzaktan bir roket! {gk} çaresiz, top doksanda!', 'Ne gol! {p} 25 metreden tavana astı!'],
+  },
+  head: {
+    miss: ['{a} ortaladı, {p} kafayı vurdu ama top üstten auta.', 'Korner... {p} yükseldi, kafa vuruşu az farkla dışarıda.'],
+    save: ['{a} ortası, {p} kafa vuruşu... {gk} yerinde!', '{p} kafayla vurdu, {gk} çizgi üzerinde topu çıkarıyor!'],
+    goal: ['{a} ortaladı, {p} yükseldi ve kafayla ağlara gönderdi!', 'Kornerden gelen topa {p} çok iyi yükseldi... GOL!'],
+  },
+  one: {
+    miss: ['{p} kaleciyle karşı karşıya... ve kaçırıyor! İnanılmaz!', '{p} birebir kaldı ama vuruşu auta gitti!'],
+    save: ['{p} birebirde, {gk} kapattı! Harika çıkış!', '{p} kaleciyi geçmeye çalıştı ama {gk} topu ayağından aldı.'],
+    goal: ['{a} ara pası, {p} kaleciyle karşı karşıya ve soğukkanlı bitiriyor!', '{p} savunmanın arkasına sarktı ve kaleciyi avlıyor!'],
+  },
+  pen: {
+    award: ['Penaltı! {t} lehine penaltı kararı!', 'Hakem beyaz noktayı gösterdi! {t} penaltı kazandı!'],
+    miss: ['{p} penaltıda topu auta gönderdi!'],
+    save: ['{p} vurdu... {gk} penaltıyı kurtardı!'],
+    goal: ['{p} penaltıyı gole çeviriyor, kaleci ters köşe!', '{p} penaltıda hata yapmıyor!'],
+  },
+  flavor: [
+    '{t} topu ayağında tutuyor.', 'Orta sahada yoğun mücadele.', 'Taraftarlar takımlarını ateşliyor.',
+    '{p} ofsayta yakalandı.', '{t} kazandığı korneri kullanıyor, sonuç çıkmadı.', 'Tempo düştü, iki takım da temkinli.',
+    '{p} sağ kanattan ortaladı, savunma uzaklaştırdı.', '{t} baskı kuruyor.', 'Hakem oyunu durdurdu, faul var.',
+  ],
+  yellow: ['{p} sert bir müdahalede bulundu, sarı kart.', 'Hakem {p} için sarı kartını çıkardı.', '{p} itirazdan sarı kart gördü.'],
+  red2: ['{p} ikinci sarı karttan kırmızı kart gördü! {t} sahada eksik kaldı.'],
+  red: ['{p} direkt kırmızı kart gördü! {t} sahada eksik kaldı.'],
+  inj: ['{p} yerde kaldı, sakatlık var gibi görünüyor.', '{p} acı içinde, sağlık ekibi sahada.'],
+};
+
+// Basın toplantısı soruları: her cevap { tx, mor (takım morali), conf (yönetim), risk }
+const PRESS = [
+  { q: 'Rakibiniz son haftalarda iyi bir çıkış yakaladı. Maça nasıl bakıyorsunuz?',
+    a: [{ tx: 'Kazanmak için sahaya çıkacağız, başka sonucu kabul etmiyoruz.', mor: 0.3, risk: 1 },
+        { tx: 'Saygı duyuyoruz, zor bir maç olacak.', mor: 0, risk: 0 },
+        { tx: 'Baskı onların üzerinde, biz kendi oyunumuza bakarız.', mor: 0.15, risk: 0 }] },
+  { q: 'Taraftarlar bu maçtan galibiyet bekliyor. Mesajınız nedir?',
+    a: [{ tx: 'Onları mahcup etmeyeceğiz, söz veriyorum.', mor: 0.35, risk: 1 },
+        { tx: 'Desteklerine her zamankinden çok ihtiyacımız var.', mor: 0.15, risk: 0 },
+        { tx: 'Beklentileri yönetmek lazım, adım adım gidiyoruz.', mor: -0.1, risk: 0 }] },
+  { q: 'Kadronun formu hakkında ne düşünüyorsunuz?',
+    a: [{ tx: 'Oyuncularıma tamamen güveniyorum.', mor: 0.3, risk: 0 },
+        { tx: 'Bazı oyuncular daha fazlasını vermeli.', mor: -0.2, risk: 0 },
+        { tx: 'Yorum yapmayacağım.', mor: 0, risk: 0 }] },
+  { q: 'Hakem kararları son maçlarda çok tartışıldı. Endişeli misiniz?',
+    a: [{ tx: 'Hakemlere güveniyoruz, işimize odaklanıyoruz.', mor: 0.1, risk: 0 },
+        { tx: 'Haklarımızı sonuna kadar savunacağız!', mor: 0.25, risk: 1 },
+        { tx: 'Bu soruya cevap vermek istemiyorum.', mor: 0, risk: 0 }] },
+];
